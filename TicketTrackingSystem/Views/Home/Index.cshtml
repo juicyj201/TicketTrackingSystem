@@ -1,16 +1,33 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿@model TicketsViewModel 
+@{ ViewData["Title"] = "Tickets"; }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<h1 class="text-danger">Tickets</h1>
+
+<div class="section center-text">
+    <table>
+        <thead>
+            <th>ID</th>
+            <th>Summary</th>
+            <th>Description</th>
+            <th>Ticket Type</th>
+            <th>Severity</th>
+            <th>Priority</th>
+            <th>Status</th>
+        </thead>
+        <tbody>
+            @foreach(var item in Model) {
+            <th>item.Ticket_ID</th>
+            <th>item.Summary</th>
+            <th>item.Description</th>
+            <th>item.Ticket_Type</th>
+            <th>item.Severity</th>
+            <th>item.Priority</th>
+            <th>item.Status</th>
+            }
+        </tbody>
+    </table>
 </div>
 
-<div class="text-center">
-    <h1>BUTTONS</h1>
-    <button>Get All</button>
-    <button>Create</button>
-    <button>Edit</button>
-    <button>Delete<button>
+<div class="section">
+    
 </div>

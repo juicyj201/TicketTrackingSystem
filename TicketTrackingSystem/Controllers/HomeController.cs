@@ -7,6 +7,7 @@ namespace TicketTrackingSystem.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly RepositoryImpl repo = new();
 
     public HomeController(ILogger<HomeController> logger)
     {
@@ -15,7 +16,8 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
-        return View();
+        var items = repo.GetAllTickets();
+        return View(items);
     }
 
     public IActionResult Privacy()
@@ -28,6 +30,4 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
-
-    public IActionResult Tickets() => return View(new TicketsViewModel() );
 }

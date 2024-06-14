@@ -7,4 +7,5 @@ public class TicketsViewModel{
     public string? Ticket_Type {get;set;} 
     public string? Severity {get;set;}
     public string? Priority {get;set;}
+    public string? Status {get;set;}
 }
