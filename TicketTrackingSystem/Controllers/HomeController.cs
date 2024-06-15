@@ -26,15 +26,15 @@ public class HomeController : Controller
         return View();
     } 
 
+    #region CRUD operations
     public IActionResult Create(){
         return View();
     }
 
     public IActionResult CreateTicket(TicketsViewModel model)
     {
-        repo.CreateTicket(model);
-        ViewBag.Message = "Data Insert Successfully";
-        Console.WriteLine("Succeeded");
+        string msg = repo.CreateTicket(model);
+        ViewBag.Message = msg;
         return View();
     }
 
@@ -44,11 +44,11 @@ public class HomeController : Controller
 
     public IActionResult EditTicket(TicketsViewModel model)
     {
-        repo.CreateTicket(model);
-        ViewBag.Message = "Data Insert Successfully";
-        Console.WriteLine("Succeeded");
+        string msg = repo.CreateTicket(model);
+        ViewBag.Message = msg;
         return View();
     }
+    #endregion
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

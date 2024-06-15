@@ -1,15 +1,16 @@
 using TicketTrackingSystem.Models;
 using System.Data.SQLite;
 using System.Configuration;
+using System.Text;
 
 namespace TicketTrackingSystem.Repository;
 
 public class Repository{
-    public virtual List<TicketsViewModel> GetTickets(){ return new();}
-    public virtual void CreateTicket(TicketsViewModel ticket){}
-    public virtual void EditTicket(TicketsViewModel ticket){}
-    public virtual void DeleteTicket(int ID){}
-    public virtual void ResolveTicket(int ID){}
+    public virtual List<TicketsViewModel> GetTickets() => new();
+    public virtual string CreateTicket(TicketsViewModel ticket) => String.Empty;
+    public virtual string EditTicket(TicketsViewModel ticket) => String.Empty;
+    public virtual string DeleteTicket(int ID) => String.Empty;
+    public virtual string ResolveTicket(int ID) => String.Empty;
 }
 
 public class RepositoryImpl : Repository
@@ -45,7 +46,7 @@ public class RepositoryImpl : Repository
         return list;
     }
 
-    public override void CreateTicket(TicketsViewModel ticket)
+    public override string CreateTicket(TicketsViewModel ticket)
     {
         if(ticket.Ticket_ID == 0 && ticket.Summary.Equals(null) && ticket.Description.Equals(null)) Console.WriteLine("The Create procedure has failed");
         else{
@@ -55,22 +56,14 @@ public class RepositoryImpl : Repository
                 conn.Open();
                 cmd.CommandText = $"INSERT into Tickets values ({ticket.Ticket_ID}, {ticket.Summary}, {ticket.Description}, {ticket.Ticket_Type}, {ticket.Severity}, {ticket.Priority}, {ticket.Status});";
                 
-                switch(cmd.ExecuteNonQuery()){
-                    case 0: 
-                        Console.WriteLine("Nothing was changed");
-                        break;
-                    case 1:
-                        Console.WriteLine($"The ticket: {ticket.Ticket_ID} has been added");
-                        break;        
-                    default:
-                        Console.WriteLine("An error occured");
-                        break;     
-                }
+                return GetResult(cmd.ExecuteNonQuery(), ticket.Ticket_ID, "updated");
             }    
         }
+
+        return String.Empty;
     }
 
-    public override void EditTicket(TicketsViewModel ticket)
+    public override string EditTicket(TicketsViewModel ticket)
     {
         if(ticket.Ticket_ID == 0 && ticket.Summary.Equals(null) && ticket.Description.Equals(null)) Console.WriteLine("The Create procedure has failed");
         else{
@@ -80,22 +73,14 @@ public class RepositoryImpl : Repository
                 conn.Open();
                 cmd.CommandText = $"INSERT into Tickets values ({ticket.Ticket_ID}, {ticket.Summary}, {ticket.Description}, {ticket.Ticket_Type}, {ticket.Severity}, {ticket.Priority}, {ticket.Status});";
                 
-                switch(cmd.ExecuteNonQuery()){
-                    case 0: 
-                        Console.WriteLine("Nothing was changed");
-                        break;
-                    case 1:
-                        Console.WriteLine($"The ticket: {ticket.Ticket_ID} has been updated");
-                        break;        
-                    default:
-                        Console.WriteLine("An error occured");
-                        break;          
-                }
+                return GetResult(cmd.ExecuteNonQuery(), ticket.Ticket_ID, "updated");
             }    
         }
+
+        return String.Empty;
     }
 
-    public override void DeleteTicket(int ID)
+    public override string DeleteTicket(int ID)
     {
         if(ID == 0) Console.WriteLine("The Delete procedure has failed.");
         else{
@@ -105,22 +90,14 @@ public class RepositoryImpl : Repository
                 conn.Open();
                 cmd.CommandText = $"DELETE from Tickets where Ticket_ID = '{ID}';";
                 
-                switch(cmd.ExecuteNonQuery()){
-                    case 0: 
-                        Console.WriteLine("Nothing was changed");
-                        break;
-                    case 1:
-                        Console.WriteLine("The ticket: {ticket.Ticket_ID} has been deleted");
-                        break;  
-                    default:
-                        Console.WriteLine("An error occured");
-                        break;       
-                }
+                return GetResult(cmd.ExecuteNonQuery(), ID, "deleted");
             }    
         }
+
+        return String.Empty;
     }
 
-    public override void ResolveTicket(int ID){
+    public override string ResolveTicket(int ID){
         if(ID == 0) Console.WriteLine("The ticket has not been resolved");
         else{
             using (var conn = new SQLiteConnection(ConnectionString))
@@ -128,18 +105,33 @@ public class RepositoryImpl : Repository
                 conn.Open();
                 cmd.CommandText = $"UPDATE Tickets SET Status = 'Closed' WHERE Ticket_ID = '{ID}';";
                 
-                switch(cmd.ExecuteNonQuery()){
-                    case 0: 
-                        Console.WriteLine("Nothing was changed");
-                        break;
-                    case 1:
-                        Console.WriteLine("The ticket: {ticket.Ticket_ID} has been resolved");
-                        break;
-                    default:
-                        Console.WriteLine("An error occured");
-                        break;         
-                }
+                return GetResult(cmd.ExecuteNonQuery(), ID, "resolved"); 
             }
         }
+
+        return String.Empty;
+    }
+
+    internal string GetResult(int result, int ticketId, string action)
+    {
+        StringBuilder builder = new();
+        switch(result)
+        {
+            case 0: 
+                Console.WriteLine("Nothing was changed");
+                return "Nothing was changed";
+            case 1:
+                builder.Append("The ticket: ");
+                builder.Append(ticketId);
+                builder.Append(" has been ");
+                builder.Append(action);
+                Console.WriteLine(builder.ToString());
+                return builder.ToString();
+            default:
+                Console.WriteLine("An error occured");
+                return "An error occured";
+        }
+
+        return String.Empty;
     }
 }
