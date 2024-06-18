@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿@{
+    var name = Context.Session.GetString("UserName");
+    var type = Context.Session.GetString("UserType");
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -17,15 +22,24 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse ms-3 collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
+                        <li class="nav-item me-3">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Create">Create New Ticket</a>
+                        @if(Context.Session.GetString("UserType") == "QA"){
+                            <li class="nav-item me-3">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Create">Create New Ticket</a>
+                            </li>
+                        }
+                        <li class="nav-item me-3">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
                         </li>
+                        
                     </ul>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-link text-dark text-end">@(type): @(name)</span>
                 </div>
             </div>
         </nav>

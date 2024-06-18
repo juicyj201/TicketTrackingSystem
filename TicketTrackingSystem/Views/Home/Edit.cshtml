@@ -1,45 +1,210 @@
-@{ ViewData["Title"] = "Edit existing ticket"; }
+@using TicketTrackingSystem.Models
+@model TicketsViewModel
+@{ 
+  ViewData["Title"] = "Edit existing ticket"; 
+}
 
-<h1 class="text-danger">Edit</h1>
+<div class="section text-center mb-5">
 
+<h1 class="text-success">Edit</h1>
 
 @if (ViewBag.Message != null)
 {
-    <p class="alert alert-success" role="alert">
+    <p class="alert alert-primary" role="alert">
         @ViewBag.Message
     </p>
 }
 
-<form>
-  <div class="mb-3">
-    <label for="id" class="form-label">Ticket ID</label>
-    <input type="number" class="form-control" required="true" id="id">
-  </div>
-  <div class="mb-3">
-    <label for="summary" class="form-label">Summary</label>
-    <input type="text" class="form-control" required="true" id="summary">
-  </div>
-  <div class="mb-3">
-    <label for="description" class="form-label">Description</label>
-    <input type="text" class="form-control" required="true" id="description">
-  </div>
-  <div class="mb-3">
-    <label for="severity" class="form-label">Severity</label>
-    <input type="text" class="form-control"  id="severity">
-  </div>
-  <div class="mb-3">
-    <label for="priority" class="form-label">Priority</label>
-    <input type="text" class="form-control"  id="priority">
-  </div>
-  <div class="mb-3">
-    <label for="status" class="form-label">Status</label>
-    <input type="text" class="form-control" id="status">
-  </div>
-  
-  @* <button type="submit" class="btn btn-primary">Submit</button> *@
-  <input type="submit" value="EditTicket" class="btn btn-default" />
-</form>
+@if(Context.Session.GetString("UserType") == "QA"){
+@using (Html.BeginForm()){ 
+  @Html.AntiForgeryToken()
+  @Html.HiddenFor(model => model.Ticket_ID)
 
-<p class="mt-4">
-    @Html.ActionLink("Back to All Tickets", "Index")
-</p>
+<br />
+    <div class="text-danger">
+      @Html.ValidationSummary(true, "Some of the fields have not been entered correctly.")
+    </div>
+  <br />
+
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Ticket_ID, "Ticket ID", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Ticket_ID, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Summary, "Summary", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Summary, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Description, "Description", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+   <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Ticket_Type, "Ticket Type", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Ticket_Type, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Severity, "Severity", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Severity, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Priority, "Priority", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Priority, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Status, "Status", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col">
+      <input type="submit" name="Submit" value="Submit" class="start-100 btn-lg btn-primary"/>
+    </div>
+
+    <div class="col">
+      <a href="@Url.Action("Delete", "Home", new { ID = Model.Ticket_ID})" >
+        <button type="button" class="start-100 btn-lg btn-danger">Delete Ticket</button>
+      </a>
+    </div>
+
+    <div class="col">
+      <a href="@Url.Action("Resolve", "Home", new { ID = Model.Ticket_ID})">
+        <button type="button" class="start-100 btn-lg btn-secondary" disabled>Resolve Ticket</button>  
+      </a>
+    </div>
+       
+    
+    <div class="col">
+      <p class="end-0">
+       <a href="@Url.Action("Index", "Home")">
+        <button type="button" class="btn-lg btn-success">Back to all tickets</button>  
+      </a>
+      </p>
+    </div>  
+  </div> 
+}
+}
+@if(Context.Session.GetString("UserType") == "RD"){
+  @using (Html.BeginForm()){ 
+  @Html.AntiForgeryToken()
+  @Html.HiddenFor(model => model.Ticket_ID)
+
+<br />
+    <div class="text-danger">
+      @Html.ValidationSummary(true, "Some of the fields have not been entered correctly.")
+    </div>
+  <br />
+
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Ticket_ID, "Ticket ID", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Ticket_ID, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Summary, "Summary", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Summary, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Description, "Description", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+   <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Ticket_Type, "Ticket Type", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Ticket_Type, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Severity, "Severity", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Severity, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Priority, "Priority", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Priority, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4">
+      @Html.LabelFor(model => model.Status, "Status", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6">
+      @Html.EditorFor(model => model.Status, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col">
+      <input type="submit" name="Submit" value="Submit" class="start-100 btn-lg btn-primary" disabled/>
+    </div>
+
+    <div class="col">
+      <a href="@Url.Action("Resolve", "Home", new { ID = Model.Ticket_ID})">
+        <button type="button" class="start-100 btn-lg btn-secondary">Resolve Ticket</button>  
+      </a>
+    </div>
+       
+    
+    <div class="col">
+      <p class="end-0">
+       <a href="@Url.Action("Index", "Home")">
+        <button type="button" class="btn-lg btn-success">Back to all tickets</button>  
+      </a>
+      </p>
+    </div>  
+  </div> 
+}
+}
+@if(Context.Session.GetString("UserType") == "Administrator")
+{
+  <div class="text-danger">
+    <span>You do not have access to edit tickets</span>  
+  </div>
+}
+</div>

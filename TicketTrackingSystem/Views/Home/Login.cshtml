@@ -1,0 +1,53 @@
+@model User
+@{ ViewData["Title"] = "Login";}
+
+<div class="section text-center">
+
+    <h1 class="text-success mb-5">Login</h1>
+
+    @if (ViewBag.Message != null) {
+        <p class="alert alert-primary" role="alert">
+            @ViewBag.Message
+        </p>
+    }    
+
+@using (Html.BeginForm()){ 
+  @Html.AntiForgeryToken()
+
+<br />
+    <div class="text-danger">
+      @Html.ValidationSummary(true, "Some of the fields have not been entered correctly.")
+    </div>
+  <br />
+
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4" >
+      @Html.LabelFor(model => model.Name, "User Name", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6" >
+      @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+  <div class="mb-3 row g-3 align-items-center">
+    <div class="col-4" >
+      @Html.LabelFor(model => model.Password, "Password", new { htmlAttributes = new { @class = "form-label"}})
+    </div>
+    <div class="col-6" >
+      @Html.PasswordFor(model => model.Password, new { htmlAttributes = new { @class = "form-control"}})
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col">
+      <input type="submit" value="Submit" class="btn-lg btn-primary"/>
+    </div>
+    
+    <div class="col">
+      <a href="@Url.Action("Index", "Home")">
+        <button type="button" class="btn-lg btn-secondary">Back to all tickets</button>  
+      </a>
+    </div>  
+  </div> 
+  }
+
+</div>

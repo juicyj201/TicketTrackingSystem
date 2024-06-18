@@ -1,9 +1,18 @@
 ﻿@model List<TicketsViewModel> 
 @{ ViewData["Title"] = "Tickets"; }
 
-<h1 class="text-danger">Tickets</h1>
+<div class="section text-center">
 
-<div class="section center-text table-responsive">
+<h1 class="text-success">Tickets</h1>
+
+@if (ViewBag.Message != null)
+{
+    <p class="alert alert-primary" role="alert">
+        @ViewBag.Message
+    </p>
+}
+
+<div class="section center-text table-responsive mt-5">
     <table class="container table table-striped">
         <thead>
             <tr>
@@ -14,29 +23,31 @@
                 <th class="p-1"><h3>Severity</h3></th>
                 <th class="p-1"><h3>Priority</h3></th>
                 <th class="p-1"><h3>Status</h3></th>
-                <!--Crud ops-->
-                <th class="p-1"></th>
-                <th class="p-1"></th>
                 <th class="p-1"></th>
             </tr>
         </thead>
         <tbody>
+             @foreach(var item in Model) {
             <tr>
-                @foreach(var item in Model) {
+               
                     <td>@item.Ticket_ID</td>
                     <td>@item.Summary</td>
                     <td>@item.Description</td>
                     <td>@item.Ticket_Type</td>
                     <td>@item.Severity</td>
-                    <td>@item.Priority</td>
+                    <td>@item.Priority</td>                    
                     <td>@item.Status</td>
+                    @if(Context.Session.GetString("UserType") == "QA"){
                     <td>
-                        <a class="text-dark" asp-area="" asp-controller="Home" asp-action="Edit">Edit</a>
-                    </td>
-                    <td><button>Delete</button></td>
-                    <td><button>Resolve</button></td>
-                }
+                        <div class="text-dark">
+                            @Html.ActionLink("Edit Ticket", "Edit", new { ID = item.Ticket_ID })
+                        </div>
+                    </td> 
+                    }
             </tr>
+            }
         </tbody>
     </table>
+</div>
+
 </div>
